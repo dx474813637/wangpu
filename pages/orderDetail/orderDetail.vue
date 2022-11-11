@@ -107,7 +107,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="order-detail" v-if="list.pay_status == 0 && list.state == 1 && list.address_id != 0">
+		<view class="order-detail" v-if="list.pay_status == 0 && list.state == 1 && list.address_id != 0 && xs == 1">
 			<view class="order-header">
 				<view class="header-left">
 					<view class="title">当前选择的优惠券</view>
@@ -472,7 +472,8 @@
 					padding: "0 10rpx",
 					fontSize: "26rpx"
 				},
-				btnList: {}
+				btnList: {},
+				xs: 0, //是否启用优惠券模块
 			};
 		},
 		onLoad(options) {
@@ -706,21 +707,28 @@
 			buyBtn() {
 				if (!this.list.id) return
 				if (!this.chooseCoupon.id && !this.chooseCoupon.guid) {
-					uni.showModal({
-						title: '优惠券提示',
-						content: '当前订单未选择优惠券，是否放弃优惠直接付款',
-						confirmText: '放弃优惠',
-						cancelText: '考虑一下',
-						success: (res) => {
-							if (res.confirm) {
-								uni.navigateTo({
-									url: `/pages/money/pay?orderid=${this.id}&price=${this.list.pay_price}`
-								})
-							} else if (res.cancel) {
-								console.log('用户点击取消');
+					if(this.xs == 1) {
+						uni.showModal({
+							title: '优惠券提示',
+							content: '当前订单未选择优惠券，是否放弃优惠直接付款',
+							confirmText: '放弃优惠',
+							cancelText: '考虑一下',
+							success: (res) => {
+								if (res.confirm) {
+									uni.navigateTo({
+										url: `/pages/money/pay?orderid=${this.id}&price=${this.list.pay_price}`
+									})
+								} else if (res.cancel) {
+									console.log('用户点击取消');
+								}
 							}
-						}
-					});
+						});
+					}
+					else {
+						uni.navigateTo({
+							url: `/pages/money/pay?orderid=${this.id}&price=${this.list.pay_price}`
+						})
+					}
 				} else {
 					uni.navigateTo({
 						url: `/pages/money/pay?orderid=${this.id}&price=${this.list.pay_price}&coupon_guid=${this.chooseCoupon.guid}&coupon_id=${this.chooseCoupon.cid}&coupon_cate=${this.chooseCoupon.cate}&coupon_coupon=${this.chooseCoupon.coupon}`
@@ -803,6 +811,7 @@
 					}
 					return ele
 				})
+				this.xs = list.data.xs;
 				// if (this.p == list.data.list.pages) {
 				// 	this.loadStatus = 'nomore'
 				// 	this.endFlag = 'true'
