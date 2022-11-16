@@ -147,7 +147,7 @@
 		},
 		async onLoad() {
 			if(Object.keys(this.$store.state.userInfo).length == 0) getUserCard()
-			
+			 
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo', 'history'])

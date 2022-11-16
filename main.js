@@ -12,7 +12,8 @@ Vue.use(uView);
 
 import navbar from './components/navbar.vue'
 Vue.component('nav-bar', navbar)
-
+import toast from 'uview-ui/components/u-toast/u-toast.vue'
+Vue.component('u-toast', toast)
 import TIM from '@/static/js/tim-wx.js'
 import tim from '@/common/tim.js'
 
